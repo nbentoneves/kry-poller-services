@@ -1,0 +1,12 @@
+{
+  "name": "kry",
+  "version": "1.0.0",
+  "description": "UI for Kry Poller",
+  "scripts": {
+    "dev": "node app.js"
+  },
+  "author": "Nuno Bento",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}

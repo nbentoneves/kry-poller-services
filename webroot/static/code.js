@@ -1,11 +1,9 @@
 const alert = document.querySelector('#alert');
 
-let servicesRequest = new Request('/service');
-
 populate()
 
 function populate() {
-    fetch(servicesRequest)
+    fetch("http://localhost:8080/service")
         .then(function (response) {
             return response.json();
         })
@@ -19,7 +17,7 @@ function populate() {
                 deleteBtn.setAttribute("class", "btn-close")
                 deleteBtn.setAttribute("aria-label", "Close")
                 deleteBtn.onclick = evt => {
-                    fetch(`/service?name=${service.name}`, {
+                    fetch(`http://localhost:8080/service?name=${service.name}`, {
                         method: 'delete',
                         headers: {
                             'Accept': 'application/json, text/plain, */*',
@@ -74,7 +72,7 @@ refreshButton.onclick = evt => {
 
 saveButton.onclick = evt => {
     let urlName = document.querySelector('#url-name').value;
-    fetch('/service', {
+    fetch('http://localhost:8080/service', {
         method: 'post',
         headers: {
             'Accept': 'application/json, text/plain, */*',
@@ -102,7 +100,7 @@ saveButton.onclick = evt => {
 updateButton.onclick = evt => {
     let urlOld = document.querySelector('#url-name-old').value;
     let urlNew = document.querySelector('#url-name-new').value;
-    fetch(`/service?name=${urlOld}`, {
+    fetch(`http://localhost:8080/service?name=${urlOld}`, {
         method: 'put',
         headers: {
             'Accept': 'application/json, text/plain, */*',

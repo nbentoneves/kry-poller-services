@@ -4,15 +4,16 @@ import com.google.common.collect.ImmutableMap;
 import com.google.gson.*;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
+import io.vertx.core.http.HttpMethod;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
+import io.vertx.ext.web.handler.CorsHandler;
 import io.vertx.ext.web.handler.StaticHandler;
 import se.kry.codetest.domain.Error;
 import se.kry.codetest.domain.Service;
-import se.kry.codetest.migrate.DBMigration;
 import se.kry.codetest.services.ServicesProvider;
 import se.kry.codetest.services.ServicesProviderImpl;
 
@@ -52,6 +53,17 @@ public class MainVerticle extends AbstractVerticle {
 
         Router router = Router.router(vertx);
         router.route().handler(BodyHandler.create());
+        //FIXME: Review this, only enable * because this is an assignment
+        router.route().handler(CorsHandler.create("*")
+                .allowedMethod(HttpMethod.GET)
+                .allowedMethod(HttpMethod.POST)
+                .allowedMethod(HttpMethod.OPTIONS)
+                .allowedMethod(HttpMethod.PUT)
+                .allowedHeader("Access-Control-Request-Method")
+                .allowedHeader("Access-Control-Allow-Credentials")
+                .allowedHeader("Access-Control-Allow-Origin")
+                .allowedHeader("Access-Control-Allow-Headers")
+                .allowedHeader("Content-Type"));
         setRoutes(router);
 
         vertx.setPeriodic(1000 * 60, timerId -> poller.pollServices());
@@ -69,6 +81,7 @@ public class MainVerticle extends AbstractVerticle {
     }
 
     private void setRoutes(Router router) {
+
         router.route("/*").handler(StaticHandler.create());
         router.get("/service").handler(this::getServices);
         router.post("/service").handler(this::addService);
@@ -98,6 +111,7 @@ public class MainVerticle extends AbstractVerticle {
                     } else {
                         routingContext.response()
                                 .putHeader("content-type", "application/json")
+                                .putHeader("Access-Control-Allow-Origin", "*")
                                 .end(gson.toJson(ImmutableMap.builder()
                                         .put("result", "OK")
                                         .build()));
@@ -115,6 +129,7 @@ public class MainVerticle extends AbstractVerticle {
                     } else {
                         routingContext.response()
                                 .putHeader("content-type", "application/json")
+                                .putHeader("Access-Control-Allow-Origin", "*")
                                 .end(gson.toJson(ImmutableMap.builder()
                                         .put("result", "OK")
                                         .build()));
@@ -131,6 +146,7 @@ public class MainVerticle extends AbstractVerticle {
                     } else {
                         routingContext.response()
                                 .putHeader("content-type", "application/json")
+                                .putHeader("Access-Control-Allow-Origin", "*")
                                 .end(gson.toJson(ImmutableMap.builder()
                                         .put("result", "OK")
                                         .build()));
@@ -142,6 +158,7 @@ public class MainVerticle extends AbstractVerticle {
         LOGGER.error("Please check the following problem:", throwable);
         routingContext.response()
                 .putHeader("content-type", "application/json")
+                .putHeader("Access-Control-Allow-Origin", "*")
                 .setStatusCode(500)
                 .end(gson.toJson(new Error("Sorry! Something wrong happen...please contact the admin", 500)));
     }
