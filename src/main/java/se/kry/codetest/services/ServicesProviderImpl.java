@@ -1,10 +1,11 @@
 package se.kry.codetest.services;
 
+import com.google.inject.Inject;
 import io.vertx.core.Future;
 import io.vertx.core.json.JsonArray;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.sql.ResultSet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.kry.codetest.DBConnector;
 import se.kry.codetest.domain.Service;
 
@@ -20,6 +21,7 @@ public class ServicesProviderImpl implements ServicesProvider {
 
     private final DBConnector dbConnector;
 
+    @Inject
     public ServicesProviderImpl(DBConnector dbConnector) {
         this.dbConnector = Objects.requireNonNull(dbConnector, "dbConnector can not be null!");
     }
@@ -32,6 +34,7 @@ public class ServicesProviderImpl implements ServicesProvider {
     public Future<Set<Service>> getServices() {
 
         LOGGER.info("opr='getServices', msg='get all services'");
+
 
         return dbConnector.query("select * from service")
                 .compose(sqlResult -> Future.succeededFuture(

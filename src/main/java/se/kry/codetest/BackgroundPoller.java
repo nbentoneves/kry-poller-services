@@ -1,14 +1,16 @@
 package se.kry.codetest;
 
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
+import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.kry.codetest.domain.Service;
 import se.kry.codetest.services.ServicesProvider;
 import se.kry.codetest.util.PingStatus;
 
 import java.util.Objects;
 
-public class BackgroundPoller {
+public class BackgroundPoller extends AbstractVerticle {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MainVerticle.class);
 
@@ -16,6 +18,13 @@ public class BackgroundPoller {
 
     public BackgroundPoller(ServicesProvider servicesProvider) {
         this.servicesProvider = Objects.requireNonNull(servicesProvider, "servicesProvider can not be null!");
+    }
+
+    @Override
+    public void start(Future<Void> startFuture) throws Exception {
+        startFuture.complete();
+        LOGGER.info("Started BackgroundPoller verticle");
+        vertx.setPeriodic(60 * 3600, timerId -> pollServices());
     }
 
     public void pollServices() {
@@ -37,6 +46,4 @@ public class BackgroundPoller {
                     }
                 });
     }
-
-
 }
