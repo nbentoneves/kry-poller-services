@@ -33,7 +33,7 @@ public class RestAPIVerticle extends AbstractVerticle {
                 .exceptionHandler(ex -> LOGGER.error("Something wrong happened", ex))
                 .listen(8080, result -> {
                     if (result.succeeded()) {
-                        LOGGER.info("KRY code test service started");
+                        LOGGER.info("Rest verticle service started");
                         startFuture.complete();
                     } else {
                         startFuture.fail(result.cause());

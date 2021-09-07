@@ -1,6 +1,7 @@
 package se.kry.codetest.code;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.servlet.ServletScopes;
 import io.vertx.core.Vertx;
 import se.kry.codetest.BackgroundPollerVerticle;
 import se.kry.codetest.DBConnector;

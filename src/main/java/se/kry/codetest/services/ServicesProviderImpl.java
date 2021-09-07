@@ -9,12 +9,14 @@ import org.slf4j.LoggerFactory;
 import se.kry.codetest.DBConnector;
 import se.kry.codetest.domain.Service;
 
+import javax.inject.Singleton;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Singleton
 public class ServicesProviderImpl implements ServicesProvider {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ServicesProviderImpl.class);
@@ -34,7 +36,6 @@ public class ServicesProviderImpl implements ServicesProvider {
     public Future<Set<Service>> getServices() {
 
         LOGGER.info("opr='getServices', msg='get all services'");
-
 
         return dbConnector.query("select * from service")
                 .compose(sqlResult -> Future.succeededFuture(

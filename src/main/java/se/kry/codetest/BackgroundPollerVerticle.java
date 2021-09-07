@@ -1,6 +1,7 @@
 package se.kry.codetest;
 
 import com.google.inject.Inject;
+import com.google.inject.servlet.RequestScoped;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import org.slf4j.Logger;
@@ -9,11 +10,13 @@ import se.kry.codetest.domain.Service;
 import se.kry.codetest.services.ServicesProvider;
 import se.kry.codetest.util.PingStatus;
 
+import java.util.Set;
+
 import static java.util.Objects.requireNonNull;
 
 public class BackgroundPollerVerticle extends AbstractVerticle {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MainVerticle.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BackgroundPollerVerticle.class);
 
     private final ServicesProvider servicesProvider;
 

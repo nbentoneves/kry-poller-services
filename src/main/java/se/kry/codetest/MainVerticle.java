@@ -5,13 +5,9 @@ import com.google.inject.Injector;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Future;
-import io.vertx.core.json.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.kry.codetest.code.BasicModule;
-import se.kry.codetest.services.ServicesProvider;
-
-import java.util.function.Supplier;
 
 public class MainVerticle extends AbstractVerticle {
 
@@ -21,13 +17,11 @@ public class MainVerticle extends AbstractVerticle {
     public void start(Future<Void> startFuture) {
 
         Injector injector = Guice.createInjector(new BasicModule(vertx));
-        ServicesProvider servicesProvider = injector.getInstance(ServicesProvider.class);
         BackgroundPollerVerticle backgroundPollerVerticle = injector.getInstance(BackgroundPollerVerticle.class);
-        RestAPIVerticle restAPIVerticle = injector.getInstance(RestAPIVerticle.class);
-
         vertx.deployVerticle(backgroundPollerVerticle,
                 new DeploymentOptions()
                         .setWorker(true)
+                        .setWorkerPoolSize(1)
                         .setWorkerPoolName("service-update-worker"),
                 handler -> {
                     if (handler.succeeded()) {
@@ -38,10 +32,10 @@ public class MainVerticle extends AbstractVerticle {
                 }
         );
 
-        vertx.deployVerticle(restAPIVerticle,
+        vertx.deployVerticle(() -> injector.getInstance(RestAPIVerticle.class),
                 //FIXME: How can create multiple instances
-                //new DeploymentOptions()
-                //        .setInstances(Runtime.getRuntime().availableProcessors()),
+                new DeploymentOptions()
+                        .setInstances(Runtime.getRuntime().availableProcessors()),
                 handler -> {
                     if (handler.succeeded()) {
                         LOGGER.info("Deployed {} with success", RestAPIVerticle.class.getName());
