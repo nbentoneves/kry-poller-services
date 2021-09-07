@@ -4,7 +4,7 @@ import com.google.inject.AbstractModule;
 import io.vertx.core.Vertx;
 import se.kry.codetest.BackgroundPollerVerticle;
 import se.kry.codetest.DBConnector;
-import se.kry.codetest.MainVerticle;
+import se.kry.codetest.RestAPIVerticle;
 import se.kry.codetest.services.ServicesProvider;
 import se.kry.codetest.services.ServicesProviderImpl;
 
@@ -23,10 +23,9 @@ public class BasicModule extends AbstractModule {
         String databaseName = System.getProperty("database-name", "poller.db");
         createDatabaseTable(vertx, databaseName);
 
-
         bind(DBConnector.class).toInstance(new DBConnector(vertx, databaseName));
-        bind(BackgroundPollerVerticle.class);
         bind(ServicesProvider.class).to(ServicesProviderImpl.class);
-        bind(MainVerticle.class);
+        bind(BackgroundPollerVerticle.class);
+        bind(RestAPIVerticle.class);
     }
 }

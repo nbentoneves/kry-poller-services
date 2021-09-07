@@ -57,7 +57,7 @@ public class MainVerticleIntegrationTest {
     void deployVerticle(Vertx vertx, VertxTestContext testContext) {
         dbConnector = new DBConnector(vertx, "poller-integration-tests.db");
         servicesProvider = new ServicesProviderImpl(dbConnector);
-        vertx.deployVerticle(new RestAPIVerticle(), testContext.succeeding(id -> testContext.completeNow()));
+        vertx.deployVerticle(new RestAPIVerticle(servicesProvider), testContext.succeeding(id -> testContext.completeNow()));
         vertx.deployVerticle(new BackgroundPollerVerticle(servicesProvider), testContext.succeeding(id -> testContext.completeNow()));
     }
 

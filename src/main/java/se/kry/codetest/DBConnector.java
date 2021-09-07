@@ -1,5 +1,6 @@
 package se.kry.codetest;
 
+import com.google.inject.Inject;
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
@@ -12,6 +13,7 @@ public class DBConnector {
 
     private final SQLClient client;
 
+    @Inject
     public DBConnector(Vertx vertx, String databaseName) {
         JsonObject config = new JsonObject()
                 .put("url", "jdbc:sqlite:" + databaseName)

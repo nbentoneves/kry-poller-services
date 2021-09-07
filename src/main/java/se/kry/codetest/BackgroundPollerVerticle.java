@@ -1,5 +1,6 @@
 package se.kry.codetest;
 
+import com.google.inject.Inject;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ public class BackgroundPollerVerticle extends AbstractVerticle {
 
     private final ServicesProvider servicesProvider;
 
+    @Inject
     public BackgroundPollerVerticle(ServicesProvider servicesProvider) {
         this.servicesProvider = requireNonNull(servicesProvider, "servicesProvider can not be null!");
     }
