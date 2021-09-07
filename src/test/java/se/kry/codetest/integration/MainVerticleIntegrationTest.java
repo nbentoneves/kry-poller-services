@@ -12,9 +12,12 @@ import io.vertx.junit5.VertxExtension;
 import io.vertx.junit5.VertxTestContext;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import se.kry.codetest.BackgroundPollerVerticle;
 import se.kry.codetest.DBConnector;
 import se.kry.codetest.MainVerticle;
+import se.kry.codetest.RestAPIVerticle;
 import se.kry.codetest.migrate.DBMigration;
+import se.kry.codetest.services.ServicesProvider;
 import se.kry.codetest.services.ServicesProviderImpl;
 
 import java.util.Optional;
@@ -30,6 +33,7 @@ public class MainVerticleIntegrationTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(MainVerticleIntegrationTest.class);
 
     private DBConnector dbConnector;
+    private ServicesProvider servicesProvider;
 
     @BeforeAll
     static void beforeAll(Vertx vertx) {
@@ -52,7 +56,9 @@ public class MainVerticleIntegrationTest {
     @BeforeEach
     void deployVerticle(Vertx vertx, VertxTestContext testContext) {
         dbConnector = new DBConnector(vertx, "poller-integration-tests.db");
-        vertx.deployVerticle(new MainVerticle(), testContext.succeeding(id -> testContext.completeNow()));
+        servicesProvider = new ServicesProviderImpl(dbConnector);
+        vertx.deployVerticle(new RestAPIVerticle(), testContext.succeeding(id -> testContext.completeNow()));
+        vertx.deployVerticle(new BackgroundPollerVerticle(servicesProvider), testContext.succeeding(id -> testContext.completeNow()));
     }
 
     @Test

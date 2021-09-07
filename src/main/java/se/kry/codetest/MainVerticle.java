@@ -8,33 +8,24 @@ import org.slf4j.LoggerFactory;
 import se.kry.codetest.services.ServicesProvider;
 import se.kry.codetest.services.ServicesProviderImpl;
 
-import static se.kry.codetest.migrate.DBMigration.createDatabaseTable;
-
 public class MainVerticle extends AbstractVerticle {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MainVerticle.class);
-
-    private BackgroundPoller poller;
-    private ServicesProvider servicesProvider;
-    private DBConnector connector;
-
+    
     @Override
     public void start(Future<Void> startFuture) {
         String databaseName = System.getProperty("database-name", "poller.db");
 
-        createDatabaseTable(vertx, databaseName);
+        DBConnector connector = new DBConnector(vertx, databaseName);
+        ServicesProvider servicesProvider = new ServicesProviderImpl(connector);
 
-        connector = new DBConnector(vertx, databaseName);
-        servicesProvider = new ServicesProviderImpl(connector);
-        poller = new BackgroundPoller(servicesProvider);
-
-        vertx.deployVerticle(new BackgroundPoller(servicesProvider),
+        vertx.deployVerticle(new BackgroundPollerVerticle(servicesProvider),
                 new DeploymentOptions()
                         .setWorker(true)
                         .setWorkerPoolName("service-update-worker"),
                 handler -> {
                     if (handler.succeeded()) {
-                        LOGGER.info("Deployed {} with success", BackgroundPoller.class.getName());
+                        LOGGER.info("Deployed {} with success", BackgroundPollerVerticle.class.getName());
                     } else {
                         LOGGER.info("Failed deployed", handler.cause());
                     }

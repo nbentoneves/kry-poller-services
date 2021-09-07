@@ -52,6 +52,7 @@ public final class ServiceStatusAPI {
                         .allowedMethod(HttpMethod.POST)
                         .allowedMethod(HttpMethod.OPTIONS)
                         .allowedMethod(HttpMethod.PUT)
+                        .allowedMethod(HttpMethod.DELETE)
                         .allowedHeader("Access-Control-Request-Method")
                         .allowedHeader("Access-Control-Allow-Credentials")
                         .allowedHeader("Access-Control-Allow-Origin")

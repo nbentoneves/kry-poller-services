@@ -14,9 +14,9 @@ public class PingStatus {
     private static final Logger LOGGER = LoggerFactory.getLogger(MainVerticle.class);
     private static final int TIMEOUT = 3000;
 
-    public static Future<Service.Status> getStatus(String url) {
+    public static Service.Status getStatus(String url) {
 
-        Future<Service.Status> resultStatus;
+        Service.Status resultStatus;
 
         try {
 
@@ -27,13 +27,13 @@ public class PingStatus {
             connection.connect();
 
             if (connection.getResponseCode() == 500) {
-                resultStatus = Future.succeededFuture(Service.Status.FAIL);
+                resultStatus = Service.Status.FAIL;
             } else {
-                resultStatus = Future.succeededFuture(Service.Status.OK);
+                resultStatus = Service.Status.OK;
             }
         } catch (Exception ex) {
             LOGGER.error("Problem trying to get the URL status", ex);
-            resultStatus = Future.succeededFuture(Service.Status.UNKNOWN);
+            resultStatus = Service.Status.UNKNOWN;
         }
 
         return resultStatus;

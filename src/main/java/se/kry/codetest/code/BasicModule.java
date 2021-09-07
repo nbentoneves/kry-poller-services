@@ -2,7 +2,7 @@ package se.kry.codetest.code;
 
 import com.google.inject.AbstractModule;
 import io.vertx.core.Vertx;
-import se.kry.codetest.BackgroundPoller;
+import se.kry.codetest.BackgroundPollerVerticle;
 import se.kry.codetest.DBConnector;
 import se.kry.codetest.MainVerticle;
 import se.kry.codetest.services.ServicesProvider;
@@ -25,7 +25,7 @@ public class BasicModule extends AbstractModule {
 
 
         bind(DBConnector.class).toInstance(new DBConnector(vertx, databaseName));
-        bind(BackgroundPoller.class);
+        bind(BackgroundPollerVerticle.class);
         bind(ServicesProvider.class).to(ServicesProviderImpl.class);
         bind(MainVerticle.class);
     }
